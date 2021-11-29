@@ -2,8 +2,6 @@ from mib import db
 
 
 class Lottery(db.Model):
-    """Representation of User model."""
-
     # The name of the table that we explicitly set
     __tablename__ = 'Lottery'
 

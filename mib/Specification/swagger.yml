@@ -9,31 +9,43 @@ servers:
   - url: /
 
 paths:
-  /lottery:
-    get:
-      tags: [Lottery]
-      summary: lottery part
-      operationId: mib.resource.lottery.lottery_join
-      description: |
-        Who the page of the lottery
-      responses:
-        '200':
-          description: search results matching criteria
+  /is_participant:
     post:
-      tags: [Lottery]
-      summary: partecipate to the lottery
-      operationId: mib.resource.lottery.lottery_join_post
-      description: Adds the user to the lottery DB
+      tags: [ Lottery ]
+      summary: return 201 if the user is a partecipate to the lottery, 202 else
+      operationId: mib.resource.lottery.is_participant
       requestBody:
         content:
           application/json:
             schema:
-              type: string
-        description: user id
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+      description: return 201 if the user is a partecipate to the lottery, 202 else
       responses:
         '201':
-          description: item created
-        '400':
-          description: invalid input, object invalid
-        '405':
-          description: already register to the lottery
+          description: user is participant
+        '202':
+          description: user is not a participant
+  /join_lottery:
+    post:
+      tags: [ Lottery ]
+      summary: return 201 if the user is a new participant, 302 generic error
+      operationId: mib.resource.lottery.join_lottery
+      description: return 201 if the user is a new participant, 302 generic error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+      responses:
+        '201':
+          description: user is participant
+        '302':
+          description: user is not a participant

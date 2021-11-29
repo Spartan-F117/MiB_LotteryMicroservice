@@ -47,7 +47,7 @@ class ProdConfig(DevConfig):
     DEBUG = False
 
     import os
-    SECRET_KEY = os.getenv('APP_SECRET_KEY', os.urandom(24))
+    SECRET_KEY = os.getenv('APP_SECRET', os.urandom(24))
 
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
