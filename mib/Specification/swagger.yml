@@ -1,0 +1,39 @@
+openapi: 3.0.1
+
+info:
+  title: Lottery Service API
+  description: Lottery Microservice of Message in a Bottle Application
+  version: 0.2-oas3
+
+servers:
+  - url: /
+
+paths:
+  /lottery:
+    get:
+      tags: [Lottery]
+      summary: lottery part
+      operationId: mib.resource.lottery.lottery_join
+      description: |
+        Who the page of the lottery
+      responses:
+        '200':
+          description: search results matching criteria
+    post:
+      tags: [Lottery]
+      summary: partecipate to the lottery
+      operationId: mib.resource.lottery.lottery_join_post
+      description: Adds the user to the lottery DB
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        description: user id
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: invalid input, object invalid
+        '405':
+          description: already register to the lottery
