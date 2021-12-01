@@ -2,6 +2,12 @@ class Config(object):
     DEBUG = False
     TESTING = False
 
+    import os
+
+    USERS_MS_PROTOCOL = os.getenv('USERS_MS_PROTOCOL', 'http')
+    USERS_MS_HOST = os.getenv('USERS_MS_HOST', 'localhost')
+    USERS_MS_PORT = os.getenv('USERS_MS_PORT', 5002)
+    USERS_MS_URL = '%s://%s:%s' % (USERS_MS_PROTOCOL, USERS_MS_HOST, USERS_MS_PORT)
 
 class DebugConfig(Config):
     """

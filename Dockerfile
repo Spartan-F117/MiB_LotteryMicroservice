@@ -12,6 +12,8 @@ COPY . /app
 # setting the workdir
 WORKDIR /app
 
+ENV FLASK_ENV=production
+
 # installing all requirements
 RUN ["pip", "install", "-r", "requirements.prod.txt"]
 

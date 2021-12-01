@@ -10,8 +10,8 @@ from flask_environments import Environments
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 import logging
-from celery.schedules import crontab
 from celery import Celery
+from flask import Flask
 
 db = None
 migrate = None
@@ -21,14 +21,13 @@ app = None
 api_app = None
 logger = None
 
-def create_celery(app):
-    '''
-            Function for create Celery instance
-        '''
+
+def create_celery():
+    REDIS_BASE_URL = 'redis://redis:6379'
     celery = Celery(
         app.import_name,
-        backend=app.config['CELERY_RESULT_BACKEND'],
-        broker=app.config['CELERY_BROKER_URL']
+        broker=f"{REDIS_BASE_URL}/0",
+        backend=f"{REDIS_BASE_URL}/1"
     )
     celery.conf.update(app.config)
 
@@ -39,6 +38,7 @@ def create_celery(app):
 
     celery.Task = ContextTask
     return celery
+
 
 def create_app():
     """
@@ -61,6 +61,15 @@ def create_app():
 
     # getting the flask app
     app = api_app.app
+
+    # MailTrap Configuration
+    app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
+    app.config['MAIL_PORT'] = 2525
+    app.config['MAIL_USERNAME'] = '0aac816f5c6371'
+    app.config['MAIL_PASSWORD'] = '4e5007c7bdbcaa'
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+
 
     flask_env = os.getenv('FLASK_ENV', 'None')
     if flask_env == 'development':
@@ -99,7 +108,6 @@ def create_app():
     # registering to api app all specifications
     register_specifications(api_app)
 
-    #create_celery(app)
     return app
 
 

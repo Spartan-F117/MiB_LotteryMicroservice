@@ -6,7 +6,7 @@ version: "3.6"
 
 services:
   db:
-    image: postgres:13
+    image: postgres:14
     restart: unless-stopped
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -29,9 +29,11 @@ services:
       - env_file
     environment:
       - POSTGRES_HOST=db
+      - FLASK_ENV=production
     depends_on:
       - db
       - migrations
+      - redis
 
   migrations:
     #
@@ -44,6 +46,31 @@ services:
     environment:
       - POSTGRES_HOST=db
     restart: on-failure
+
+  redis_lottery:
+    container_name: redis_lottery
+    image: redis:alpine
+    hostname: redis
+    ports:
+      - "6379:6379"
+        
+  celery_worker_lottery:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -b "redis://redis:6379" -A wsgi.celery_app worker --loglevel=info
+    links:
+      - redis_lottery
+    depends_on:
+      - redis_lottery
+
+  celery_beat_lottery:
+    build:
+      context: .
+    command: celery -b "redis://redis:6379" -A wsgi.celery_app beat --loglevel=info
+    depends_on:
+      - redis_lottery
 
 # Declaring all volumes
 volumes:
