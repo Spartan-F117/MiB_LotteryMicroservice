@@ -33,9 +33,9 @@ def setup_periodic_tasks(sender, **kwargs):
          - every month at day 1 and time 11:00 execute the task "lottery"
     '''
     # LOTTERY: Executes every month
-    # sender.add_periodic_task(
-    #     crontab(hour=11, minute=00, day_of_month='1'), lottery.s())
-    sender.add_periodic_task(60.0, lottery.s(), name='check for new message received...')
+    sender.add_periodic_task(
+        crontab(hour=11, minute=00, day_of_month='1'), lottery.s())
+    #sender.add_periodic_task(60.0, lottery.s(), name='check for new message received...')
 
 
 def send_mail_lottery(email, winner):
