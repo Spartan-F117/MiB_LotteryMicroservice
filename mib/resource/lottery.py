@@ -1,7 +1,7 @@
 from mib.db_model.lottery_db import Lottery, db
 from flask import jsonify, request
 
-
+#function that adds a user int the lottery db
 def join_lottery():
     post_data = request.get_json()
     user_id = post_data.get('id')
@@ -20,7 +20,7 @@ def join_lottery():
         response["message"] = "error occured"
         return jsonify(response), 302
 
-
+#function that says if a user is a partecipant or not
 def is_participant():
     post_data = request.get_json()
     user_id = post_data.get('id')
@@ -30,7 +30,7 @@ def is_participant():
     }
     lottery_query = Lottery.query.filter(Lottery.contestant_id == user_id).all()
     print(lottery_query)
-
+    #if the user is already in the db
     if lottery_query:
         print("invio 201")
         return jsonify(response), 201
